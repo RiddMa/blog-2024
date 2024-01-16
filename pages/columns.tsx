@@ -5,7 +5,7 @@ import { Layout } from "../components/layout";
 import { InferGetStaticPropsType } from "next";
 import { Columns } from "../components/columns";
 import React from "react";
-import { PostsNav } from "./posts";
+import PostsNav from "../components/posts/posts-nav";
 
 export default function ColumnsPage(
   props: InferGetStaticPropsType<typeof getStaticProps>

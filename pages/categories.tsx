@@ -4,9 +4,9 @@ import { client } from "../tina/__generated__/client";
 import { Layout } from "../components/layout";
 import { InferGetStaticPropsType } from "next";
 import React from "react";
-import { PostsNav } from "./posts";
 import { merge } from "lodash-es";
 import { Categories } from "../components/categories";
+import PostsNav from "../components/posts/posts-nav";
 
 export default function ColumnsPage(
   props: InferGetStaticPropsType<typeof getStaticProps>
