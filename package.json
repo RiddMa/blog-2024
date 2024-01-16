@@ -1,5 +1,5 @@
 {
-  "name": "@tinacms/starter",
+  "name": "@ridd/blog-2024",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -30,7 +30,8 @@
     "@tailwindcss/typography": "^0.5.8",
     "@types/lodash-es": "^4.17.12",
     "date-fns": "^2.23.0",
-    "next": "^13.3.1",
+    "eslint-config-next": "^14.0.4",
+    "next": "^14.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.2.0",
