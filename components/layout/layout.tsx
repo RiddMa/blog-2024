@@ -3,14 +3,14 @@ import Head from "next/head";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { Theme } from "./theme";
-import layoutData from "../../content/global/index.json";
+import layoutData from "../../public/content/global/index.json";
 import { Global } from "../../tina/__generated__/types";
 
 export const Layout = ({
-  rawData = {},
-  data = layoutData,
-  children,
-}: {
+                         rawData = {},
+                         data = layoutData,
+                         children
+                       }: {
   rawData?: object;
   data?: Omit<Global, "id" | "_sys" | "_values">;
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export const Layout = ({
   return (
     <>
       <Head>
-        <title>Tina</title>
+        <title>Ridd的主页</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         {data.theme.font === "nunito" && (
           <>
@@ -42,23 +42,31 @@ export const Layout = ({
         )}
       </Head>
       <Theme data={data?.theme}>
-        <div
-          className={`min-h-screen flex flex-col ${
-            data.theme.font === "nunito" && "font-nunito"
-          } ${data.theme.font === "lato" && "font-lato"} ${
-            data.theme.font === "sans" && "font-sans"
-          }`}
-        >
-          <Header data={data?.header} />
-          <div className="flex-1 text-gray-800 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-1000 flex flex-col">
-            {children}
+        <Header data={data?.header} />
+        <div className={`color-body z-0 flex min-h-screen flex-col justify-start space-y-0`}>
+          <div className={`h-[96px]`}></div>
+          <div className={`content-wrapper %bg-gray-100 grow pb-16`}>
+            <div className={`article-wrapper %bg-gray-200`}>{children}</div>
           </div>
-          <Footer
-            rawData={rawData}
-            data={data?.footer}
-            icon={data?.header.icon}
-          />
+          <Footer data={data?.footer} icon={data?.header.icon} />
         </div>
+        {/*<div*/}
+        {/*  className={`min-h-screen flex flex-col ${*/}
+        {/*    data.theme.font === "nunito" && "font-nunito"*/}
+        {/*  } ${data.theme.font === "lato" && "font-lato"} ${*/}
+        {/*    data.theme.font === "sans" && "font-sans"*/}
+        {/*  }`}*/}
+        {/*>*/}
+        {/*  <Header data={data?.header} />*/}
+        {/*  <div className="flex-1 text-gray-800 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-1000 flex flex-col">*/}
+        {/*    {children}*/}
+        {/*  </div>*/}
+        {/*  <Footer*/}
+        {/*    rawData={rawData}*/}
+        {/*    data={data?.footer}*/}
+        {/*    icon={data?.header.icon}*/}
+        {/*  />*/}
+        {/*</div>*/}
       </Theme>
     </>
   );

@@ -1,0 +1,82 @@
+{
+  "header": {
+    "icon": {
+      "name": "BiCool",
+      "color": "blue",
+      "style": "float"
+    },
+    "name": "Ridd的主页",
+    "color": "default",
+    "nav": [
+      {
+        "href": "",
+        "label": "主页"
+      },
+      {
+        "href": "posts",
+        "label": "博客"
+      },
+      {
+        "href": "ideas",
+        "label": "想法"
+      },
+      {
+        "href": "about",
+        "label": "关于"
+      }
+    ]
+  },
+  "footer": {
+    "color": "default",
+    "nav": [
+      {
+        "href": "/",
+        "label": "主页"
+      },
+      {
+        "href": "/posts",
+        "label": "文章"
+      },
+      {
+        "href": "/categories",
+        "label": "分类"
+      },
+      {
+        "href": "/columns",
+        "label": "专栏"
+      },
+      {
+        "href": "/ideas",
+        "label": "想法"
+      },
+      {
+        "href": "/about",
+        "label": "关于"
+      }
+    ],
+    "social": {
+      "github": "https://github.com/RiddMa"
+    }
+  },
+  "postNavs": {
+    "nav": [
+      {
+        "href": "/posts",
+        "label": "文章"
+      },
+      {
+        "href": "/categories",
+        "label": "分类"
+      },
+      {
+        "href": "/columns",
+        "label": "专栏"
+      }
+    ]
+  },
+  "theme": {
+    "color": "blue",
+    "font": "sans",
+    "darkMode": "system"
+  }
+}

@@ -5,7 +5,7 @@ import { ColorPickerInput } from "../fields/color";
 const Global: Collection = {
   label: "Global",
   name: "global",
-  path: "content/global",
+  path: "public/content/global",
   format: "json",
   ui: {
     global: true,
@@ -76,6 +76,33 @@ const Global: Collection = {
         },
         {
           type: "object",
+          label: "Nav Links",
+          name: "nav",
+          list: true,
+          ui: {
+            itemProps: (item) => {
+              return { label: item?.label };
+            },
+            defaultItem: {
+              href: "home",
+              label: "Home",
+            },
+          },
+          fields: [
+            {
+              type: "string",
+              label: "Link",
+              name: "href",
+            },
+            {
+              type: "string",
+              label: "Label",
+              name: "label",
+            },
+          ],
+        },
+        {
+          type: "object",
           label: "Social Links",
           name: "social",
           fields: [
@@ -98,6 +125,40 @@ const Global: Collection = {
               type: "string",
               label: "Github",
               name: "github",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "object",
+      label: "Post Navs",
+      name: "postNavs",
+      fields: [
+        {
+          type: "object",
+          label: "Nav Links",
+          name: "nav",
+          list: true,
+          ui: {
+            itemProps: (item) => {
+              return { label: item?.label };
+            },
+            defaultItem: {
+              href: "/posts",
+              label: "Posts",
+            },
+          },
+          fields: [
+            {
+              type: "string",
+              label: "Link",
+              name: "href",
+            },
+            {
+              type: "string",
+              label: "Label",
+              name: "label",
             },
           ],
         },

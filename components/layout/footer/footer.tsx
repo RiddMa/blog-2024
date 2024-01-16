@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaFacebookF, FaGithub, FaTwitter } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { Container } from "../../util/container";
-import { RawRenderer } from "./rawRenderer";
 import { useTheme } from "..";
 import { Icon } from "../../util/icon";
 
-export const Footer = ({ data, icon, rawData }) => {
+export const Footer = ({ data, icon = null }) => {
   const theme = useTheme();
   const socialIconClasses = "h-7 w-auto";
   const socialIconColorClasses = {
@@ -19,7 +18,7 @@ export const Footer = ({ data, icon, rawData }) => {
     purple: "text-purple-500 dark:text-purple-400 hover:text-purple-300",
     orange: "text-orange-500 dark:text-orange-400 hover:text-orange-300",
     yellow: "text-yellow-500 dark:text-yellow-400 hover:text-yellow-300",
-    primary: "text-white opacity-80 hover:opacity-100",
+    primary: "text-white opacity-80 hover:opacity-100"
   };
 
   const footerColor = {
@@ -33,8 +32,8 @@ export const Footer = ({ data, icon, rawData }) => {
       pink: "text-white from-pink-500 to-pink-600",
       purple: "text-white from-purple-500 to-purple-600",
       orange: "text-white from-orange-500 to-orange-600",
-      yellow: "text-white from-yellow-500 to-yellow-600",
-    },
+      yellow: "text-white from-yellow-500 to-yellow-600"
+    }
   };
 
   const footerColorCss =
@@ -42,24 +41,28 @@ export const Footer = ({ data, icon, rawData }) => {
       ? footerColor.primary[theme.color]
       : footerColor.default;
 
+  const [viewCount, setViewCount] = useState(0);
+  useEffect(() => {
+    const apiPrefix = {
+      production: "api",
+      development: "test"
+    };
+    fetch(`${process.env.VIEWCOUNT_API}/${apiPrefix[process.env.NODE_ENV]}/total/`)
+      .then((response) => response.json()) // parse JSON from request
+      .then((resultData) => {
+        setViewCount(resultData.totalView);
+      });
+  }, []);
+
   return (
     <footer className={`bg-gradient-to-br ${footerColorCss}`}>
-      <Container className="relative" size="small">
-        <div className="flex justify-between items-center gap-6 flex-wrap">
-          <Link
-            href="/"
-            className="group mx-2 flex items-center font-bold tracking-tight text-gray-400 dark:text-gray-300 opacity-50 hover:opacity-100 transition duration-150 ease-out whitespace-nowrap"
-          >
-            <Icon
-              parentColor={data.color}
-              data={{
-                name: icon.name,
-                color: data.color === "primary" ? "primary" : icon.color,
-                style: icon.style,
-              }}
-              className="inline-block h-10 w-auto group-hover:text-orange-500"
-            />
-          </Link>
+      <Container
+        className="px-4 py-16 flex flex-row flex-wrap justify-center gap-8 lg:gap-16 prose-text transition-apple opacity-80 hover:opacity-100">
+        <div className="flex flex-row flex-wrap justify-between items-center gap-4">
+          {data?.nav?.map((nav) =>
+            <Link key={nav.href} href={nav.href} className="">
+              {nav.label}
+            </Link>)}
           <div className="flex gap-4">
             {data.social && data.social.facebook && (
               <a
@@ -71,7 +74,7 @@ export const Footer = ({ data, icon, rawData }) => {
                   className={`${socialIconClasses} ${
                     socialIconColorClasses[
                       data.color === "primary" ? "primary" : theme.color
-                    ]
+                      ]
                   }`}
                 />
               </a>
@@ -86,7 +89,7 @@ export const Footer = ({ data, icon, rawData }) => {
                   className={`${socialIconClasses} ${
                     socialIconColorClasses[
                       data.color === "primary" ? "primary" : theme.color
-                    ]
+                      ]
                   }`}
                 />
               </a>
@@ -101,7 +104,7 @@ export const Footer = ({ data, icon, rawData }) => {
                   className={`${socialIconClasses} ${
                     socialIconColorClasses[
                       data.color === "primary" ? "primary" : theme.color
-                    ]
+                      ]
                   }`}
                 />
               </a>
@@ -116,20 +119,43 @@ export const Footer = ({ data, icon, rawData }) => {
                   className={`${socialIconClasses} ${
                     socialIconColorClasses[
                       data.color === "primary" ? "primary" : theme.color
-                    ]
+                      ]
                   }`}
                 />
               </a>
             )}
           </div>
-          <RawRenderer parentColor={data.color} rawData={rawData} />
         </div>
-        <div
-          className={`absolute h-1 bg-gradient-to-r from-transparent ${
-            data.color === "primary" ? `via-white` : `via-black dark:via-white`
-          } to-transparent top-0 left-4 right-4 opacity-5`}
-        ></div>
+        <div className="flex flex-col gap-2 text-caption">
+          <div className={`mx-auto`}>
+          <span>
+            {viewCount ? `${viewCount}` : `...`}
+            {` 次访问。`}
+          </span>
+          </div>
+          <div className={`mx-auto flex flex-row flex-wrap justify-center gap-x-1`}>
+            <span className={`whitespace-nowrap`}>{`© Ridd Ma 始于 2023，`}</span>
+            <span className={`whitespace-nowrap`}>
+            {`使用 `}
+              <a href={`https://creativecommons.org/licenses/by-nc-sa/4.0/`} target="_blank">CC-BY-NC-SA 4.0</a>
+              {` 授权。`}
+          </span>
+          </div>
+          <div className={`mx-auto flex flex-row flex-wrap justify-center gap-x-1`}>
+          <span className={`whitespace-nowrap`}>{`由 `}
+            <a href={`https://creativecommons.org/licenses/by-nc-sa/4.0/`} target="_blank">TinaCMS</a>
+            {` 强力驱动。`}
+          </span>
+          </div>
+        </div>
+
+
       </Container>
+      <div
+        className={`absolute h-1 bg-gradient-to-r from-transparent ${
+          data.color === "primary" ? `via-white` : `via-black dark:via-white`
+        } to-transparent top-0 left-4 right-4 opacity-5`}
+      ></div>
     </footer>
   );
 };

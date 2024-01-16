@@ -5,6 +5,28 @@ query pageQuery {
       node {
         id
         date
+        updateDate
+        heroImg
+        categories {
+          category {
+            ... on Category{
+              name
+              _sys {
+                path
+              }
+            }
+          }
+        }
+        columns {
+          column {
+            ... on Column {
+              name
+              _sys {
+                path
+              }
+            }
+          }
+        }
         title
         excerpt
         author {
@@ -14,6 +36,7 @@ query pageQuery {
         }
         _sys {
           filename
+          path
         }
       }
     }
@@ -35,6 +58,66 @@ query blogPostQuery($relativePath: String!) {
       ... on Author {
         name
         avatar
+      }
+    }
+  }
+}
+
+query columnQuery{
+  ...LayoutQueryFragment
+  columnConnection {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...ColumnParts
+      }
+    }
+  }
+}
+
+query categoryQuery{
+  ...LayoutQueryFragment
+  categoryConnection {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...CategoryParts
       }
     }
   }

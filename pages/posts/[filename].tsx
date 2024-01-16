@@ -11,7 +11,7 @@ export default function BlogPostPage(
   const { data } = useTina({
     query: props.query,
     variables: props.variables,
-    data: props.data,
+    data: props.data
   });
   if (data && data.post) {
     return (
@@ -22,19 +22,20 @@ export default function BlogPostPage(
   }
   return (
     <Layout>
-      <div>No data</div>;
+      <div>No data</div>
+      ;
     </Layout>
   );
 }
 
 export const getStaticProps = async ({ params }) => {
   const tinaProps = await client.queries.blogPostQuery({
-    relativePath: `${params.filename}.mdx`,
+    relativePath: `${params.filename}.mdx`
   });
   return {
     props: {
-      ...tinaProps,
-    },
+      ...tinaProps
+    }
   };
 };
 
@@ -49,9 +50,9 @@ export const getStaticPaths = async () => {
   const postsListData = await client.queries.postConnection();
   return {
     paths: postsListData.data.postConnection.edges.map((post) => ({
-      params: { filename: post.node._sys.filename },
+      params: { filename: post.node._sys.filename }
     })),
-    fallback: "blocking",
+    fallback: "blocking"
   };
 };
 

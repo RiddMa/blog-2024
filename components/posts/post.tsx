@@ -1,26 +1,29 @@
 /**
-Copyright 2021 Forestry.io Holdings, Inc.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Copyright 2021 Forestry.io Holdings, Inc.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 import React from "react";
 import { Container } from "../util/container";
 import { Section } from "../util/section";
 import { useTheme } from "../layout";
-import format from "date-fns/format";
+import type { Components, TinaMarkdownContent } from "tinacms/dist/rich-text";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
 import { Prism } from "tinacms/dist/rich-text/prism";
-import type { TinaMarkdownContent, Components } from "tinacms/dist/rich-text";
 import { PostType } from "../../pages/posts/[filename]";
 import { tinaField } from "tinacms/dist/react";
+import Link from "next/link";
+import { ImageAwesome } from "../blocks/image-awesome";
+import { format, formatDistanceToNowStrict } from "date-fns";
+import { zhCN } from "date-fns/locale";
 
 const components: Components<{
   BlockQuote: {
@@ -106,10 +109,12 @@ const components: Components<{
     );
   },
   img: (props) => (
-    <span className="flex items-center justify-center">
-      <img src={props.url} alt={props.alt} />
+    <span>
+      <div className="h-4"></div>
+      <ImageAwesome src={props.url} alt={props.alt} />
+      <div className="h-4"></div>
     </span>
-  ),
+  )
 };
 
 export const Post = (props: PostType) => {
@@ -125,89 +130,110 @@ export const Post = (props: PostType) => {
     orange:
       "from-orange-300 to-orange-600 dark:from-orange-200 dark:to-orange-500",
     yellow:
-      "from-yellow-400 to-yellow-500 dark:from-yellow-300 dark:to-yellow-500",
+      "from-yellow-400 to-yellow-500 dark:from-yellow-300 dark:to-yellow-500"
   };
 
   const date = new Date(props.date);
   let formattedDate = "";
+  let dateToNow = "";
   if (!isNaN(date.getTime())) {
-    formattedDate = format(date, "MMM dd, yyyy");
+    formattedDate = format(date, "yyyy-MM-dd, HH:mm");
+    dateToNow = formatDistanceToNowStrict(date, { addSuffix: true, locale: zhCN });
   }
-
+  const updateDate = new Date(props.updateDate);
+  let formattedUpdateDate = "";
+  let updateDateToNow = "";
+  if (!isNaN(updateDate.getTime())) {
+    formattedUpdateDate = format(updateDate, "yyyy-MM-dd, HH:mm");
+    updateDateToNow = formatDistanceToNowStrict(date, { addSuffix: true, locale: zhCN });
+  }
   return (
-    <Section className="flex-1">
-      <Container width="small" className={`flex-1 pb-2`} size="large">
-        <h2
+    <Section>
+      <Container className="flex flex-col gap-8">
+        <h1
           data-tina-field={tinaField(props, "title")}
-          className={`w-full relative	mb-8 text-6xl font-extrabold tracking-normal text-center title-font`}
+          className={`text-h1 text-center bg-clip-text text-transparent bg-gradient-to-r ${
+            titleColorClasses[theme.color]
+          }`}
         >
-          <span
-            className={`bg-clip-text text-transparent bg-gradient-to-r ${
-              titleColorClasses[theme.color]
-            }`}
-          >
-            {props.title}
-          </span>
-        </h2>
+          {props.title}
+        </h1>
         <div
-          data-tina-field={tinaField(props, "author")}
-          className="flex items-center justify-center mb-16"
+          className="flex flex-row flex-wrap gap-4 items-center justify-center"
         >
-          {props.author && (
-            <>
-              <div className="flex-shrink-0 mr-4">
-                <img
-                  data-tina-field={tinaField(props.author, "avatar")}
-                  className="h-14 w-14 object-cover rounded-full shadow-sm"
-                  src={props.author.avatar}
-                  alt={props.author.name}
-                />
+          <div className="flex flex-col text-body text-color-caption text-end">
+            {props.categories && <p>
+              分类
+            </p>}
+            {props.columns && <p>
+              专栏
+            </p>}
+            {props.date && <p>
+              发布
+            </p>}
+            {props.updateDate && <p>
+              更新
+            </p>}
+          </div>
+          <div className="flex flex-col text-body ">
+            {props.categories &&
+              <div data-tina-field={tinaField(props, "categories")} className="flex flex-row gap-4">
+                {
+                  props.categories.map((category) =>
+                    <p key={category?.category?.name} className="text-color-href">
+                      {category?.category?.name}
+                    </p>
+                  )
+                }
               </div>
-              <p
-                data-tina-field={tinaField(props.author, "name")}
-                className="text-base font-medium text-gray-600 group-hover:text-gray-800 dark:text-gray-200 dark:group-hover:text-white"
-              >
-                {props.author.name}
-              </p>
-              <span className="font-bold text-gray-200 dark:text-gray-500 mx-2">
-                —
+            }
+            {props.columns &&
+              <div data-tina-field={tinaField(props, "columns")} className="flex flex-row gap-4">
+                {
+                  props.columns.map((column) =>
+                    <Link key={column?.column?.name} href={`/columns/${column.column._sys.filename}`}
+                          className="text-color-href">
+                      {column?.column?.name}
+                    </Link>
+                  )
+                }
+              </div>
+            }
+            {props.date &&
+              <span data-tina-field={tinaField(props, "date")} className="text-color-caption">
+                {formattedDate}
               </span>
-            </>
-          )}
-          <p
-            data-tina-field={tinaField(props, "date")}
-            className="text-base text-gray-400 group-hover:text-gray-500 dark:text-gray-300 dark:group-hover:text-gray-150"
-          >
-            {formattedDate}
-          </p>
-        </div>
-      </Container>
-      {props.heroImg && (
-        <div className="px-4 w-full">
-          <div
-            data-tina-field={tinaField(props, "heroImg")}
-            className="relative max-w-4xl lg:max-w-5xl mx-auto"
-          >
-            <img
-              src={props.heroImg}
-              className="absolute block rounded-lg w-full h-auto blur-2xl brightness-150 contrast-[0.9] dark:brightness-150 saturate-200 opacity-50 dark:opacity-30 mix-blend-multiply dark:mix-blend-hard-light"
-              aria-hidden="true"
-            />
-            <img
-              src={props.heroImg}
-              alt={props.title}
-              className="relative z-10 mb-14 block rounded-lg w-full h-auto opacity-100"
-            />
+            }
+            {props.updateDate &&
+              <span data-tina-field={tinaField(props, "updateDate")} className="text-body text-color-caption">
+                {formattedUpdateDate}
+              </span>
+            }
           </div>
         </div>
-      )}
-      <Container className={`flex-1 pt-4`} width="small" size="large">
+        {props.heroImg && <ImageAwesome data-tina-field={tinaField(props, "heroImg")} src={props.heroImg}
+                                        alt={props.title} />
+        }
         <div
           data-tina-field={tinaField(props, "_body")}
-          className="prose dark:prose-dark w-full max-w-none"
+          className="prose-article flex flex-col"
         >
           <TinaMarkdown components={components} content={props._body} />
         </div>
+        {props.tags &&
+          <div className="flex flex-row flex-nowrap gap-4 prose-text text-color-caption">
+            <span>标签:</span>
+            <div data-tina-field={tinaField(props, "tags")} className="flex flex-row gap-4">
+              {
+                props.tags.map((tag) =>
+                  <span key={tag} className="text-color-caption">
+                    {tag}
+                  </span>
+                )
+              }
+            </div>
+          </div>
+        }
       </Container>
     </Section>
   );

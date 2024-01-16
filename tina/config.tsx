@@ -4,6 +4,8 @@ import Post from "./collection/post";
 import Global from "./collection/global";
 import Author from "./collection/author";
 import Page from "./collection/page";
+import Category from "./collection/category";
+import Column from "./collection/column";
 
 const config = defineConfig({
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID!,
@@ -21,7 +23,7 @@ const config = defineConfig({
     // this is the config for the tina cloud media store
     tina: {
       publicFolder: "public",
-      mediaRoot: "uploads",
+      mediaRoot: "",
     },
   },
   build: {
@@ -29,7 +31,7 @@ const config = defineConfig({
     outputFolder: "admin", // within the public folder
   },
   schema: {
-    collections: [Post, Global, Author, Page],
+    collections: [Post, Global, Author, Page, Category, Column],
   },
 });
 

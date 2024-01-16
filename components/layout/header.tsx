@@ -22,8 +22,8 @@ export const Header = ({ data }: { data: GlobalHeader }) => {
       pink: "text-white from-pink-400 to-pink-500",
       purple: "text-white from-purple-400 to-purple-500",
       orange: "text-white from-orange-400 to-orange-500",
-      yellow: "text-white from-yellow-400 to-yellow-500",
-    },
+      yellow: "text-white from-yellow-400 to-yellow-500"
+    }
   };
 
   const headerColorCss =
@@ -43,7 +43,7 @@ export const Header = ({ data }: { data: GlobalHeader }) => {
     orange:
       "border-b-3 border-orange-200 text-orange-700 dark:text-orange-300 font-medium dark:border-orange-700",
     yellow:
-      "border-b-3 border-yellow-300 text-yellow-700 dark:text-yellow-300 font-medium dark:border-yellow-600",
+      "border-b-3 border-yellow-300 text-yellow-700 dark:text-yellow-300 font-medium dark:border-yellow-600"
   };
 
   const activeBackgroundClasses = {
@@ -54,7 +54,7 @@ export const Header = ({ data }: { data: GlobalHeader }) => {
     pink: "text-pink-500",
     purple: "text-purple-500",
     orange: "text-orange-500",
-    yellow: "text-yellow-500",
+    yellow: "text-yellow-500"
   };
   const [isClient, setIsClient] = React.useState(false);
   React.useEffect(() => {
@@ -67,86 +67,76 @@ export const Header = ({ data }: { data: GlobalHeader }) => {
     >
       <Container size="custom" className="py-0 relative z-10 max-w-8xl">
         <div className="flex items-center justify-between gap-6">
-          <h4 className="select-none text-lg font-bold tracking-tight my-4 transition duration-150 ease-out transform">
-            <Link
-              href="/"
-              className="flex gap-1 items-center whitespace-nowrap tracking-[.002em]"
-            >
-              <Icon
-                tinaField={tinaField(data, "icon")}
-                parentColor={data.color}
-                data={{
-                  name: data.icon.name,
-                  color: data.icon.color,
-                  style: data.icon.style,
-                }}
-              />
-              <span data-tina-field={tinaField(data, "name")}>{data.name}</span>
-            </Link>
-          </h4>
-          <ul className="flex gap-6 sm:gap-8 lg:gap-10 tracking-[.002em] -mx-4">
-            {data.nav &&
-              data.nav.map((item, i) => {
-                const activeItem =
-                  (item.href === ""
-                    ? router.asPath === "/"
-                    : router.asPath.includes(item.href)) && isClient;
-                return (
-                  <li
-                    key={`${item.label}-${i}`}
-                    className={`${
-                      activeItem ? activeItemClasses[theme.color] : ""
-                    }`}
+          <Link href="/"
+                className="select-none flex gap-2 items-center whitespace-nowrap"
+          >
+            {/*<Icon*/}
+            {/*  tinaField={tinaField(data, "icon")}*/}
+            {/*  parentColor={data.color}*/}
+            {/*  data={{*/}
+            {/*    name: data.icon.name,*/}
+            {/*    color: data.icon.color,*/}
+            {/*    style: data.icon.style*/}
+            {/*  }}*/}
+            {/*/>*/}
+            <h1 data-tina-field={tinaField(data, "name")} className="text-base">{data.name}</h1>
+          </Link>
+          <ul className="flex gap-4 fhd:gap-8 -mx-4">
+            {data.nav && data.nav.map((item, i) => {
+              const activeItem =
+                (item.href === ""
+                  ? router.asPath === "/"
+                  : router.asPath.includes(item.href)) && isClient;
+              return (
+                <li key={`${item.label}-${i}`} className={`${activeItem ? activeItemClasses[theme.color] : ""}`}
+                >
+                  <Link
+                    data-tina-field={tinaField(item, "label")}
+                    href={`/${item.href}`}
+                    className={`relative select-none text-base inline-block tracking-wide transition-apple hover:opacity-100 py-8 px-4 ${activeItem ? `` : `opacity-70`}`}
                   >
-                    <Link
-                      data-tina-field={tinaField(item, "label")}
-                      href={`/${item.href}`}
-                      className={`relative select-none	text-base inline-block tracking-wide transition duration-150 ease-out hover:opacity-100 py-8 px-4 ${
-                        activeItem ? `` : `opacity-70`
-                      }`}
-                    >
-                      {item.label}
-                      {activeItem && (
-                        <svg
-                          className={`absolute bottom-0 left-1/2 w-[180%] h-full -translate-x-1/2 -z-1 opacity-10 dark:opacity-15 ${
-                            activeBackgroundClasses[theme.color]
-                          }`}
-                          preserveAspectRatio="none"
-                          viewBox="0 0 230 230"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="230"
-                            y="230"
-                            width="230"
-                            height="230"
-                            transform="rotate(-180 230 230)"
-                            fill="url(#paint0_radial_1_33)"
-                          />
-                          <defs>
-                            <radialGradient
-                              id="paint0_radial_1_33"
-                              cx="0"
-                              cy="0"
-                              r="1"
-                              gradientUnits="userSpaceOnUse"
-                              gradientTransform="translate(345 230) rotate(90) scale(230 115)"
-                            >
-                              <stop stopColor="currentColor" />
-                              <stop
-                                offset="1"
-                                stopColor="currentColor"
-                                stopOpacity="0"
-                              />
-                            </radialGradient>
-                          </defs>
-                        </svg>
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
+                    {item.label}
+                    {activeItem && (
+                      <svg
+                        className={`absolute bottom-0 left-1/2 w-[180%] h-full -translate-x-1/2 -z-1 opacity-10 dark:opacity-15 ${
+                          activeBackgroundClasses[theme.color]
+                        }`}
+                        preserveAspectRatio="none"
+                        viewBox="0 0 230 230"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          x="230"
+                          y="230"
+                          width="230"
+                          height="230"
+                          transform="rotate(-180 230 230)"
+                          fill="url(#paint0_radial_1_33)"
+                        />
+                        <defs>
+                          <radialGradient
+                            id="paint0_radial_1_33"
+                            cx="0"
+                            cy="0"
+                            r="1"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="translate(345 230) rotate(90) scale(230 115)"
+                          >
+                            <stop stopColor="currentColor" />
+                            <stop
+                              offset="1"
+                              stopColor="currentColor"
+                              stopOpacity="0"
+                            />
+                          </radialGradient>
+                        </defs>
+                      </svg>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div

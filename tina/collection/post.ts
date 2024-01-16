@@ -3,12 +3,12 @@ import type { Collection } from "tinacms";
 const Post: Collection = {
   label: "Blog Posts",
   name: "post",
-  path: "content/posts",
+  path: "public/content/posts",
   format: "mdx",
   ui: {
     router: ({ document }) => {
-      return `/posts/${document._sys.filename}`;
-    },
+      return `/article/${document._sys.filename}`;
+    }
   },
   fields: [
     {
@@ -16,32 +16,78 @@ const Post: Collection = {
       label: "Title",
       name: "title",
       isTitle: true,
-      required: true,
+      required: true
     },
     {
       type: "image",
       name: "heroImg",
-      label: "Hero Image",
+      label: "Hero Image"
     },
     {
       type: "rich-text",
       label: "Excerpt",
-      name: "excerpt",
+      name: "excerpt"
     },
     {
       type: "reference",
       label: "Author",
       name: "author",
-      collections: ["author"],
+      collections: ["author"]
+    },
+    {
+      type: "object",
+      label: "Categories",
+      name: "categories",
+      list: true,
+      fields: [
+        {
+          type: "reference",
+          label: "Category",
+          name: "category",
+          collections: ["category"]
+        }
+      ]
+    },
+    {
+      type: "object",
+      label: "Columns",
+      name: "columns",
+      list: true,
+      fields: [
+        {
+          type: "reference",
+          label: "Column",
+          name: "column",
+          collections: ["column"]
+        }
+      ]
+    },
+    {
+      type: "string",
+      label: "Tags",
+      name: "tags",
+      list: true,
+      ui: {
+        component: "tags"
+      }
     },
     {
       type: "datetime",
       label: "Posted Date",
       name: "date",
       ui: {
-        dateFormat: "MMMM DD YYYY",
-        timeFormat: "hh:mm A",
-      },
+        dateFormat: "YYYY MMMM DD",
+        timeFormat: "hh:mm A"
+      }
+    },
+    {
+      type: "datetime",
+      label: "Updated Date",
+      name: "updateDate",
+      ui: {
+        dateFormat: "YYYY MMMM DD",
+        timeFormat: "hh:mm A"
+      }
     },
     {
       type: "rich-text",
@@ -57,9 +103,9 @@ const Post: Collection = {
               name: "format",
               label: "Format",
               type: "string",
-              options: ["utc", "iso", "local"],
-            },
-          ],
+              options: ["utc", "iso", "local"]
+            }
+          ]
         },
         {
           name: "BlockQuote",
@@ -68,14 +114,14 @@ const Post: Collection = {
             {
               name: "children",
               label: "Quote",
-              type: "rich-text",
+              type: "rich-text"
             },
             {
               name: "authorName",
               label: "Author",
-              type: "string",
-            },
-          ],
+              type: "string"
+            }
+          ]
         },
         {
           name: "NewsletterSignup",
@@ -84,35 +130,35 @@ const Post: Collection = {
             {
               name: "children",
               label: "CTA",
-              type: "rich-text",
+              type: "rich-text"
             },
             {
               name: "placeholder",
               label: "Placeholder",
-              type: "string",
+              type: "string"
             },
             {
               name: "buttonText",
               label: "Button Text",
-              type: "string",
+              type: "string"
             },
             {
               name: "disclaimer",
               label: "Disclaimer",
-              type: "rich-text",
-            },
+              type: "rich-text"
+            }
           ],
           ui: {
             defaultItem: {
               placeholder: "Enter your email",
-              buttonText: "Notify Me",
-            },
-          },
-        },
+              buttonText: "Notify Me"
+            }
+          }
+        }
       ],
-      isBody: true,
-    },
-  ],
+      isBody: true
+    }
+  ]
 };
 
 export default Post;
