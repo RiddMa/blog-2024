@@ -38,3 +38,46 @@
 .text-color-href {
   @apply text-sky-800 hover:text-sky-600 dark:text-sky-300 dark:hover:text-sky-100;
 }
+
+
+.prose-base{
+  @apply prose prose-slate min-w-0 max-w-none transition-all duration-300 ease-apple dark:prose-invert;
+  word-break: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+.prose-article-card {
+  /*@apply prose prose-slate max-w-none transition-all duration-300 ease-apple dark:prose-invert fhd:prose-lg;*/
+  @apply prose prose-slate max-w-none transition-all duration-300 ease-apple dark:prose-invert prose-h1:m-0 prose-h2:m-0 prose-p:m-0;
+  word-break: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+.prose-text {
+  @apply prose prose-slate min-w-0 max-w-none transition-all duration-300 ease-apple dark:prose-invert prose-h1:m-0 prose-h2:m-0 prose-p:m-0 hover:prose-a:text-sky-600;
+  word-break: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+.prose-article {
+  @apply prose prose-slate w-full min-w-0 max-w-none transition-all duration-300 ease-apple dark:prose-invert prose-a:text-sky-600 hover:prose-a:underline;
+  /*@apply prose prose-slate w-full min-w-0 max-w-[960px] transition-all duration-300 ease-apple dark:prose-invert prose-h1:leading-normal prose-h2:leading-normal prose-h3:leading-normal prose-h4:leading-normal prose-a:text-sky-600 hover:prose-a:underline prose-blockquote:text-slate-600 prose-code:text-base prose-code:text-slate-700 prose-pre:m-0 prose-pre:p-0 dark:prose-a:text-sky-400 dark:prose-blockquote:text-slate-400 dark:prose-code:text-slate-300 xl:prose-code:text-lg;*/
+  word-break: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}

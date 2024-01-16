@@ -1,0 +1,17 @@
+@import "styles.css";
+
+.blur-bg {
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.blur-mask {
+  backdrop-filter: saturate(150%) blur(5px);
+}
+
+.top-bar-wrapper {
+  @apply fixed z-[100] w-full px-2 xl:px-4;
+}
+
+.top-bar {
+  @apply blur-bg transition-apple z-[100] mx-auto my-2 max-w-[1024px] rounded-2xl p-0 drop-shadow-2xl xl:my-4;
+}
