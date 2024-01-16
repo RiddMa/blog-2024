@@ -1,4 +1,20 @@
 module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'blog.riddma.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'blog-2024-three.vercel.app',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets.tina.io',
+      },
+    ],
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
