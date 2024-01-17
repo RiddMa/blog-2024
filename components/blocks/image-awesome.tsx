@@ -7,6 +7,7 @@ export function ImageAwesome({ src, alt, className, halo = true }: {
   className?: string,
   halo?: boolean
 }) {
+  // console.log("\nimg src:", src,"\n");
   return <span className={`relative ${className}`}>
     {halo && <Image aria-hidden={true} src={src} alt={alt}
                     className="card absolute blur-3xl brightness-150 contrast-[0.8] saturate-200 opacity-50 dark:opacity-30"

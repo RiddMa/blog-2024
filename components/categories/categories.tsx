@@ -39,6 +39,7 @@ export function CategoryCard(props: { category: PageQueryCategoryType }) {
 
 export const Categories = ({ data }: { data: CategoriesType[] }) => {
   return <div className="flex flex-col gap-8">
+    <p className="px-content prose-text">共{data.length}个</p>
     {data.map((categoryData) => {
       return (
         <CategoryCard key={categoryData.node._sys.filename} category={categoryData.node} />

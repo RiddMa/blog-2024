@@ -14,7 +14,6 @@
 import React from "react";
 import { Container } from "../util/container";
 import { Section } from "../util/section";
-import { useTheme } from "../layout";
 import type { Components, TinaMarkdownContent } from "tinacms/dist/rich-text";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
 import { Prism } from "tinacms/dist/rich-text/prism";
@@ -24,6 +23,9 @@ import Link from "next/link";
 import { ImageAwesome } from "../blocks/image-awesome";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { zhCN } from "date-fns/locale";
+import { fixImgPath } from "../../util/util";
+
+let mdPath = "";
 
 const components: Components<{
   BlockQuote: {
@@ -108,31 +110,19 @@ const components: Components<{
       </div>
     );
   },
-  img: (props) => (
-    <span>
+  img: (props) => {
+    // console.log("mdbody", mdPath);
+    return <span>
       <div className="h-4"></div>
-      <ImageAwesome src={props.url} alt={props.alt} />
+      <ImageAwesome src={fixImgPath(mdPath, props.url)} alt={props.alt} />
       <div className="h-4"></div>
-    </span>
-  )
+    </span>;
+  }
 };
 
 export const Post = (props: PostType) => {
-  const theme = useTheme();
-  const titleColorClasses = {
-    blue: "from-blue-400 to-blue-600 dark:from-blue-300 dark:to-blue-500",
-    teal: "from-teal-400 to-teal-600 dark:from-teal-300 dark:to-teal-500",
-    green: "from-green-400 to-green-600",
-    red: "from-red-400 to-red-600",
-    pink: "from-pink-300 to-pink-500",
-    purple:
-      "from-purple-400 to-purple-600 dark:from-purple-300 dark:to-purple-500",
-    orange:
-      "from-orange-300 to-orange-600 dark:from-orange-200 dark:to-orange-500",
-    yellow:
-      "from-yellow-400 to-yellow-500 dark:from-yellow-300 dark:to-yellow-500"
-  };
-
+  mdPath = props._sys.path;
+  console.log(mdPath);
   const date = new Date(props.date);
   let formattedDate = "";
   let dateToNow = "";
@@ -152,9 +142,7 @@ export const Post = (props: PostType) => {
       <Container className="flex flex-col gap-8">
         <h1
           data-tina-field={tinaField(props, "title")}
-          className={`text-h1 text-center bg-clip-text text-transparent bg-gradient-to-r ${
-            titleColorClasses[theme.color]
-          }`}
+          className={`text-h1 text-center bg-clip-text text-transparent bg-gradient-to-r`}
         >
           {props.title}
         </h1>
@@ -211,8 +199,9 @@ export const Post = (props: PostType) => {
             }
           </div>
         </div>
-        {props.heroImg && <ImageAwesome data-tina-field={tinaField(props, "heroImg")} src={props.heroImg}
-                                        alt={props.title} />
+        {props.heroImg &&
+          <ImageAwesome data-tina-field={tinaField(props, "heroImg")} src={fixImgPath(mdPath, props.heroImg)}
+                        alt={props.title} />
         }
         <div
           data-tina-field={tinaField(props, "_body")}

@@ -39,6 +39,7 @@ export function ColumnCard(props: { column: PageQueryColumnType }) {
 
 export const Columns = ({ data }: { data: ColumnsType[] }) => {
   return <div className="flex flex-col gap-8">
+    <p className="px-content prose-text">共{data.length}个</p>
     {data.map((columnData) => {
       return (
         <ColumnCard key={columnData.node._sys.filename} column={columnData.node} />

@@ -1,124 +1,132 @@
 query pageQuery {
-  ...LayoutQueryFragment
-  postConnection {
-    edges {
-      node {
-        id
-        date
-        updateDate
-        heroImg
-        categories {
-          category {
-            ... on Category{
-              name
-              _sys {
-                path
-              }
+    ...LayoutQueryFragment
+    postConnection {
+        edges {
+            node {
+                id
+                date
+                updateDate
+                heroImg
+                categories {
+                    category {
+                        ... on Category{
+                            name
+                            _sys {
+                                path
+                            }
+                        }
+                    }
+                }
+                columns {
+                    column {
+                        ... on Column {
+                            name
+                            _sys {
+                                path
+                            }
+                        }
+                    }
+                }
+                title
+                excerpt
+                author {
+                    ... on Author {
+                        ...AuthorParts
+                    }
+                }
+                _sys {
+                    filename
+                    path
+                }
             }
-          }
         }
-        columns {
-          column {
-            ... on Column {
-              name
-              _sys {
-                path
-              }
-            }
-          }
-        }
-        title
-        excerpt
-        author {
-          ... on Author {
-            ...AuthorParts
-          }
-        }
-        _sys {
-          filename
-          path
-        }
-      }
     }
-  }
 }
 
 query contentQuery($relativePath: String!) {
-  ...LayoutQueryFragment
-  page(relativePath: $relativePath) {
-    ...PageParts
-  }
+    ...LayoutQueryFragment
+    page(relativePath: $relativePath) {
+        ...PageParts
+    }
 }
 
 query blogPostQuery($relativePath: String!) {
-  ...LayoutQueryFragment
-  post(relativePath: $relativePath) {
-    ...PostParts
-    author {
-      ... on Author {
-        name
-        avatar
-      }
+    ...LayoutQueryFragment
+    post(relativePath: $relativePath) {
+        ...PostParts
+        author {
+            ... on Author {
+                name
+                avatar
+            }
+        }
+        _sys {
+            filename
+            basename
+            breadcrumbs
+            path
+            relativePath
+            extension
+        }
     }
-  }
 }
 
 query columnQuery{
-  ...LayoutQueryFragment
-  columnConnection {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
+    ...LayoutQueryFragment
+    columnConnection {
+        pageInfo {
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
         }
-        ...ColumnParts
-      }
+        totalCount
+        edges {
+            cursor
+            node {
+                ... on Document {
+                    _sys {
+                        filename
+                        basename
+                        breadcrumbs
+                        path
+                        relativePath
+                        extension
+                    }
+                    id
+                }
+                ...ColumnParts
+            }
+        }
     }
-  }
 }
 
 query categoryQuery{
-  ...LayoutQueryFragment
-  categoryConnection {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
+    ...LayoutQueryFragment
+    categoryConnection {
+        pageInfo {
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
         }
-        ...CategoryParts
-      }
+        totalCount
+        edges {
+            cursor
+            node {
+                ... on Document {
+                    _sys {
+                        filename
+                        basename
+                        breadcrumbs
+                        path
+                        relativePath
+                        extension
+                    }
+                    id
+                }
+                ...CategoryParts
+            }
+        }
     }
-  }
 }

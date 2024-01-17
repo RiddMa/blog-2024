@@ -5,11 +5,11 @@ const Post: Collection = {
   name: "post",
   path: "public/content/posts",
   format: "mdx",
-  ui: {
-    router: ({ document }) => {
-      return `/article/${document._sys.filename}`;
-    }
-  },
+  // ui: {
+  //   router: ({ document }) => {
+  //     return `/article/${document._sys.filename}`;
+  //   }
+  // },
   fields: [
     {
       type: "string",
