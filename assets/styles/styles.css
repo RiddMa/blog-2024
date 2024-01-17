@@ -46,10 +46,16 @@ body.dark {
   @apply bg-white hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-slate-700 transition-all duration-300 ease-apple ;
 }
 
-.card{
+.card {
   @apply rounded-3xl
 }
 
 .transition-apple {
   @apply transform-gpu transition-all duration-300 ease-apple;
+}
+
+.glowEffect {
+  background-image: radial-gradient(ellipse 100% 50% at center bottom, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+  background-size: 100% 300%;
+  background-position: 50% 100%;
 }

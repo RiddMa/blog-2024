@@ -12,7 +12,7 @@ const PostsNav = ({ navs }: { navs: { __typename: "GlobalPostNavsNav", href?: st
     return currentPath.includes(href);
   };
 
-  return <div className="flex flex-row gap-4 prose-base items-baseline prose-h1:m-0">
+  return <div className="flex flex-row gap-4 prose-base items-baseline prose-h1:m-0 px-8">
     {navs && navs.map((nav) => {
         const isNavActive = isClient && isActivePath(nav.href, router.asPath);
         return <Link href={nav.href} key={nav.href}>
