@@ -29,6 +29,7 @@
     "@heroicons/react": "^2.1.1",
     "@redux-devtools/extension": "^3.3.0",
     "@tailwindcss/typography": "^0.5.8",
+    "@types/is-url": "^1.2.32",
     "@types/lodash-es": "^4.17.12",
     "date-fns": "^2.23.0",
     "eslint-config-next": "^14.0.4",

@@ -2,22 +2,12 @@ module.exports = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "blog.riddma.com"
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '**',
       },
-      {
-        protocol: "https",
-        hostname: "blog-2024-three.vercel.app"
-      },
-      {
-        protocol: "https",
-        hostname: "assets.tina.io"
-      },
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ]
+    ],
   },
   webpack(config) {
     config.module.rules.push({

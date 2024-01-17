@@ -122,7 +122,6 @@ const components: Components<{
 
 export const Post = (props: PostType) => {
   mdPath = props._sys.path;
-  console.log(mdPath);
   const date = new Date(props.date);
   let formattedDate = "";
   let dateToNow = "";
