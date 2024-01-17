@@ -141,7 +141,7 @@ export const Post = (props: PostType) => {
       <Container className="flex flex-col gap-8">
         <h1
           data-tina-field={tinaField(props, "title")}
-          className={`text-h1 text-center bg-clip-text text-transparent bg-gradient-to-r`}
+          className={`text-h0 text-center`}
         >
           {props.title}
         </h1>

@@ -7,8 +7,12 @@
   @apply text-sm;
 }
 
+.text-h0 {
+  @apply text-5xl font-bold leading-normal;
+}
+
 .text-h1 {
-  @apply text-6xl font-bold leading-normal;
+  @apply text-4xl font-semibold leading-normal;
 }
 
 /*.text-h2 {*/

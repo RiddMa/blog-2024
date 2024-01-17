@@ -23,7 +23,7 @@ export const Column = ({ column, global }) => {
         </div>
         <div className="flex flex-col gap-8">
           {column.posts.length != 0 &&
-            <p className="prose-text text-end">{column.posts.length}篇文章</p>
+            <p className="prose-text text-end px-content text-color-caption">{column.posts.length}篇文章</p>
           }
           {column.posts.length ?
             column.posts.map((postData) => {

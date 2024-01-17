@@ -62,7 +62,7 @@ export function PostCard(props: {
 export const Posts = ({ data }: { data: PostsType[] }) => {
   return (
     <div className="flex flex-col gap-8">
-      <p className="px-content prose-text">共{data.length}个</p>
+      <p className="px-content prose-text text-end text-color-caption">{data.length}篇文章</p>
       {data.map((postData) => {
         return (
           <PostCard key={postData.node._sys.filename} post={postData.node} />

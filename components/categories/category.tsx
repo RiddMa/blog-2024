@@ -23,7 +23,7 @@ export const Category = ({ category, global }) => {
         </div>
         <div className="flex flex-col gap-8">
           {category.posts.length != 0 &&
-            <p className="prose-text text-end">{category.posts.length}篇文章</p>
+            <p className="prose-text text-end px-content text-color-caption">{category.posts.length}篇文章</p>
           }
           {category.posts.length ?
             category.posts.map((postData) => {
