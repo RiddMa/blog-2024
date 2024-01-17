@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "tinacms dev -c \"next dev\"",
-    "build": "tinacms build && next build",
-    "start": "tinacms build && next start",
-    "export": "npm run build && next export",
+    "dev": "node preprocess-md.js && tinacms dev -c \"next dev\"",
+    "build": "node preprocess-md.js && tinacms build && next build",
+    "start": "node preprocess-md.js && tinacms build && next start",
+    "export": "node preprocess-md.js && npm run build && next export",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "devDependencies": {

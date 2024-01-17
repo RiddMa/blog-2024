@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
-import isUrl from "is-url";
+const fs = require("fs");
+const path = require("path");
+const isUrl = require("is-url");
 
-export const fixImgPath = (mdPath: string, imgPath: string): string | null => {
+const fixImgPath = (mdPath, imgPath) => {
   if (!imgPath) {
     return null;
   }
@@ -10,7 +10,7 @@ export const fixImgPath = (mdPath: string, imgPath: string): string | null => {
     return imgPath;
   }
 
-  let mdDirectory: string;
+  let mdDirectory;
   // Determine the base directory for the markdown file
   if (mdPath.includes("\\")) {
     mdDirectory = path.dirname(mdPath.split("\\").join(path.posix.sep));
@@ -27,25 +27,45 @@ export const fixImgPath = (mdPath: string, imgPath: string): string | null => {
   if (resolvedPath.startsWith(publicPathPrefix)) {
     resolvedPath = resolvedPath.substring(publicPathPrefix.length);
   }
+  if (resolvedPath !== imgPath) {
+    console.log("Modified image path: ", imgPath, " -> ", resolvedPath);
+  }
   return resolvedPath;
 };
 
 
 // Directory containing markdown files
-const markdownDirectory = path.join(__dirname, "public", "content");
-
+let markdownDirectory = path.join(__dirname, "public", "content");
+let baseDirectory = path.join(__dirname, "public");
 // Function to update image paths in markdown content
-const updateImagePaths = (filePath: string, content: string) => {
+const updateImagePaths = (filePath, content) => {
   // Regular expression to find markdown image syntax
   const imageRegex = /!\[.*?\]\((.*?)\)/g;
-  return content.replace(imageRegex, (match: string, imgPath: string) => {
-    const fixedPath = fixImgPath(filePath, imgPath);
+  content = content.replace(imageRegex, (match, imgPath) => {
+    const fixedPath = fixImgPath(filePath.replace(baseDirectory, ""), imgPath);
     return match.replace(imgPath, fixedPath);
   });
+
+  // Replace path in frontmatter's heroImg field
+  const frontmatterRegex = /^---[\s\S]+?---/;
+  const frontmatterMatch = content.match(frontmatterRegex);
+  if (frontmatterMatch) {
+    const frontmatter = frontmatterMatch[0];
+    const heroImgRegex = /heroImg:\s*["']?(.*?)["']?(\s|$)/;
+
+    const updatedFrontmatter = frontmatter.replace(heroImgRegex, (match, imgPath) => {
+      const fixedPath = fixImgPath(filePath.replace(baseDirectory, ""), imgPath);
+      return `heroImg: ${fixedPath}\n`;
+    });
+
+    content = content.replace(frontmatterRegex, updatedFrontmatter);
+  }
+
+  return content;
 };
 
 // Function to process each markdown file
-const processMarkdownFiles = (dir:string) => {
+const processMarkdownFiles = (dir) => {
   fs.readdirSync(dir).forEach(file => {
     const fullPath = path.join(dir, file);
     const fileStat = fs.statSync(fullPath);
