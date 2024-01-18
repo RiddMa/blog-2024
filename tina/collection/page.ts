@@ -8,6 +8,7 @@ const Page: Collection = {
   label: "Pages",
   name: "page",
   path: "public/content/pages",
+  format: "mdx",
   ui: {
     router: ({ document }) => {
       if (document._sys.filename === "home") {
@@ -17,7 +18,7 @@ const Page: Collection = {
         return `/about`;
       }
       return undefined;
-    },
+    }
   },
   fields: [
     {
@@ -27,7 +28,7 @@ const Page: Collection = {
       description:
         "The title of the page. This is used to display the title in the CMS",
       isTitle: true,
-      required: true,
+      required: true
     },
     {
       type: "object",
@@ -35,7 +36,7 @@ const Page: Collection = {
       name: "blocks",
       label: "Sections",
       ui: {
-        visualSelector: true,
+        visualSelector: true
       },
       templates: [
         heroBlockSchema,
@@ -43,10 +44,16 @@ const Page: Collection = {
         // @ts-ignore
         featureBlockSchema,
         contentBlockSchema,
-        testimonialBlockSchema,
-      ],
+        testimonialBlockSchema
+      ]
     },
-  ],
+    {
+      type: "rich-text",
+      label: "Body",
+      name: "_body",
+      isBody: true
+    }
+  ]
 };
 
 export default Page;

@@ -4,6 +4,7 @@ import { Blocks } from "../components/blocks-renderer";
 import { useTina } from "tinacms/dist/react";
 import { Layout } from "../components/layout";
 import { client } from "../tina/__generated__/client";
+import Page from "../tina/collection/page";
 
 export default function HomePage(
   props: InferGetStaticPropsType<typeof getStaticProps>
@@ -19,14 +20,14 @@ export default function HomePage(
 
 export const getStaticProps = async ({ params }) => {
   const tinaProps = await client.queries.contentQuery({
-    relativePath: `${params.filename}.md`,
+    relativePath: `${params.filename}.${Page.format}`
   });
   const props = {
     ...tinaProps,
-    enableVisualEditing: process.env.VERCEL_ENV === "preview",
+    enableVisualEditing: process.env.VERCEL_ENV === "preview"
   };
   return {
-    props: JSON.parse(JSON.stringify(props)) as typeof props,
+    props: JSON.parse(JSON.stringify(props)) as typeof props
   };
 };
 
@@ -34,8 +35,8 @@ export const getStaticPaths = async () => {
   const pagesListData = await client.queries.pageConnection();
   return {
     paths: pagesListData.data.pageConnection?.edges?.map((page) => ({
-      params: { filename: page?.node?._sys.filename },
+      params: { filename: page?.node?._sys.filename }
     })),
-    fallback: false,
+    fallback: false
   };
 };

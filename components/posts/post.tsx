@@ -24,6 +24,7 @@ import { ImageAwesome } from "../blocks/image-awesome";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { fixImgPath } from "../../util/util";
+import isUrl from "is-url";
 
 let mdPath = "";
 
@@ -111,7 +112,6 @@ const components: Components<{
     );
   },
   img: (props) => {
-    // console.log("mdbody", mdPath);
     return <span>
       <div className="h-4"></div>
       <ImageAwesome src={fixImgPath(mdPath, props.url)} alt={props.alt} />
