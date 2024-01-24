@@ -11,8 +11,9 @@
  limitations under the License.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { createElement, useEffect, useState, Fragment } from "react";
 import { Container } from "../util/container";
+import * as prod from "react/jsx-runtime";
 import { Section } from "../util/section";
 import { PostType } from "../../pages/posts/[filename]";
 import { tinaField } from "tinacms/dist/react";
@@ -20,15 +21,12 @@ import Link from "next/link";
 import { ImageAwesome } from "../blocks/image-awesome";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { zhCN } from "date-fns/locale";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import emoji from "remark-emoji";
-import rehypeKatex from "rehype-katex";
-import rehypeRaw from "rehype-raw";
-import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { unified } from "unified";
+import parse from "rehype-parse";
+import rehype2react from "rehype-react";
 
 export const Post = (props: PostType) => {
   const date = new Date(props.date);
@@ -47,6 +45,70 @@ export const Post = (props: PostType) => {
   }
 
   const [copied, setCopied] = useState(false);
+
+  // @ts-expect-error: the react types are missing.
+  const production = { Fragment: prod.Fragment, jsx: prod.jsx, jsxs: prod.jsxs };
+
+  const processor = unified()
+    .use(parse, { fragment: true }) // Parse the HTML as fragment
+    .use(rehype2react, {
+      components: {
+        "pre": (props) => {
+          return <pre className={`relative m-0 p-0`}>{props.children}</pre>;
+        },
+        "code": ({ node, className, children, ...props }) => {
+          const match = /language-(\w+)/.exec(className || "");
+          const language = match?.[1] ? match[1] : "";
+          return language ? (
+            <>
+              <CopyToClipboard
+                text={children}
+                onCopy={() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+              >
+                <button className={`absolute right-4 top-4`}>
+                  {copied ? <span>OK!</span> : <span>Copy</span>}
+                </button>
+              </CopyToClipboard>
+              <SyntaxHighlighter
+                children={String(children).replace(/\n$/, "")}
+                wrapLines={false}
+                wrapLongLines={false}
+                style={oneDark}
+                language={language}
+                showLineNumbers={true}
+                PreTag="div"
+                customStyle={{
+                  margin: 0,
+                  padding: "1rem 0.5rem",
+                  borderRadius: "1rem",
+                  fontSize: "1.125rem",
+                  fontWeight: "regular"
+                }}
+                codeTagProps={{
+                  style: { fontFamily: "JetBrains Mono, monospace", color: "#cbd5e1" }
+                }}
+              />
+            </>
+          ) : (
+            <code {...props} className={`${className}`}>
+              {children}
+            </code>
+          );
+        },
+        "img": ({ src, alt }) => {
+          const { base64, metadata } = props.images[src];
+          return <ImageAwesome src={src} alt={alt} width={metadata.width} height={metadata.height}
+                               blurDataURL={base64} />;
+          return <pre>{JSON.stringify(props.images[src], null, 4)}</pre>;
+        }
+      },
+      ...production
+    });
+
+  const ReactComponent = processor.processSync(props["html"]).result;
 
   return (
     <Section>
@@ -118,68 +180,8 @@ export const Post = (props: PostType) => {
           data-tina-field={tinaField(props, "_body")}
           className="prose-article flex flex-col"
         >
-          {/*<TinaMarkdown components={components} content={props._body} />*/}
-          <Markdown remarkPlugins={[remarkGfm, remarkMath, emoji]}
-                    rehypePlugins={[rehypeKatex, rehypeRaw]}
-                    className={`transition-apple prose-article`}
-                    skipHtml={false}
-                    components={{
-                      pre(props) {
-                        return <pre className={`relative m-0 p-0`}>{props.children}</pre>;
-                      },
-                      code({ node, className, children, ...props }) {
-                        const match = /language-(\w+)/.exec(className || "");
-                        const language = match?.[1] ? match[1] : "";
-                        return language ? (
-                          <>
-                            <CopyToClipboard
-                              text={children}
-                              onCopy={() => {
-                                setCopied(true);
-                                setTimeout(() => setCopied(false), 2000);
-                              }}
-                            >
-                              <button className={`absolute right-4 top-4`}>
-                                {copied ? <span>OK!</span> : <span>Copy</span>}
-                              </button>
-                            </CopyToClipboard>
-                            <SyntaxHighlighter
-                              children={String(children).replace(/\n$/, "")}
-                              wrapLines={false}
-                              wrapLongLines={false}
-                              style={oneDark}
-                              language={language}
-                              showLineNumbers={true}
-                              PreTag="div"
-                              customStyle={{
-                                margin: 0,
-                                padding: "1rem 0.5rem",
-                                borderRadius: "1rem",
-                                fontSize: "1.125rem",
-                                fontWeight: "regular"
-                              }}
-                              codeTagProps={{
-                                style: { fontFamily: "JetBrains Mono, monospace", color: "#cbd5e1" }
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <code {...props} className={`${className}`}>
-                            {children}
-                          </code>
-                        );
-                      },
-                      img: (props) => {
-                        return <span>
-                          <div className="h-4"></div>
-                          <ImageAwesome src={props.src} alt={props.alt} />
-                          <div className="h-4"></div>
-                        </span>;
-                      }
-                    }}
-          >
-            {props["rawBody"]}
-          </Markdown>
+          {ReactComponent}
+          {/*<div dangerouslySetInnerHTML={{ __html: props["html"] }} />*/}
         </div>
         {props.tags &&
           <div className="flex flex-row flex-nowrap gap-4 prose-text text-color-caption">

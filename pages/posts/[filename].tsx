@@ -6,8 +6,26 @@ import { InferGetStaticPropsType } from "next";
 import PostDef from "../../tina/collection/post";
 import { fixImgPath } from "../../util/util";
 import path from "path";
-import * as fs from "fs";
+import fs from "fs";
 import matter from "gray-matter";
+import { getPlaiceholder } from "plaiceholder";
+import rehypeSanitize from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
+import rehypeRaw from "rehype-raw";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
+import { reporter } from "vfile-reporter";
+import { merge } from "lodash-es";
+import remarkGfm from "remark-gfm";
+import remarkFrontmatter from "remark-frontmatter";
+
+import remarkMath from "remark-math";
+import remarkEmoji from "remark-emoji";
+import rehypeKatex from "rehype-katex";
+import isUrl from "is-url";
+import https from "https";
+import { randomBytes } from 'crypto';
 
 // Use the props returned by get static props
 export default function BlogPostPage(
@@ -46,10 +64,31 @@ export const getStaticProps = async ({ params }) => {
 
   // Read the markdown file
   let fileContents = fs.readFileSync(filePath, "utf8");
-
+  const imageUrls = [];
   const imageRegex = /!\[.*?\]\((.*?)\)/g;
   fileContents = fileContents.replace(imageRegex, (match, imgPath) => {
     const fixedPath = fixImgPath(tinaProps.data.post._sys.path, imgPath);
+    // if (isUrl(fixedPath)) {
+    //   const fileUrl = fixedPath; // Replace with your file URL
+    //   // Generate a random hex string for the file name
+    //   const randomFileName = randomBytes(16).toString('hex');
+    //   const filePath = path.resolve("./public", "downloadedFile.ext"); // Replace 'downloadedFile.ext' with your desired file name and extension
+    //
+    //   const file = fs.createWriteStream(filePath);
+    //
+    //   await new Promise((resolve, reject) => {
+    //     https.get(fileUrl, function(response) {
+    //       response.pipe(file);
+    //       file.on("finish", function() {
+    //         file.close(resolve);
+    //       });
+    //     }).on("error", function(err) {
+    //       fs.unlink(filePath); // Delete the file async. (But we don't check the result)
+    //       reject(err);
+    //     });
+    //   });
+    // }
+    imageUrls.push(fixedPath);
     return match.replace(imgPath, fixedPath);
   });
 
@@ -73,10 +112,40 @@ export const getStaticProps = async ({ params }) => {
   const { content } = matter(fileContents);
   tinaProps.data.post["rawBody"] = content;
 
+  // Generate placeholders for each image
+  const images = {};
+  for (const url of imageUrls) {
+    const file = fs.readFileSync(path.join(process.cwd(), "public", url));
+    const img = await getPlaiceholder(file);
+    images[url] = img;
+  }
+
+  const file = await unified()
+    .use(remarkParse)
+    .use(remarkFrontmatter)
+    .use(remarkGfm)
+    .use(remarkMath)
+    .use(remarkEmoji)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeKatex)
+    .use(rehypeRaw)
+    .use(rehypeSanitize)
+    .use(rehypeStringify)
+    .process(fileContents);
+
+  console.error(reporter(file));
+  // console.log(String(file));
+
+
   return {
-    props: {
-      ...tinaProps
-    }
+    props: merge(tinaProps, {
+      data: {
+        post: {
+          images: images,
+          html: String(file)
+        }
+      }
+    })
   };
 };
 
