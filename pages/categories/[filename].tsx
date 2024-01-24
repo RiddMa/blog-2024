@@ -6,7 +6,7 @@ import { merge } from "lodash-es";
 import React from "react";
 import { Category } from "../../components/categories/category";
 import CategoryDef from "../../tina/collection/category";
-
+import { fixImgPath } from "../../util/util";
 
 
 // Use the props returned by get static props
@@ -31,6 +31,9 @@ export const getStaticProps = async ({ params }) => {
   });
   const postResponse = await client.queries.postConnection({
     filter: { categories: { category: { category: { name: { eq: tinaProps.data.category.name } } } } }
+  });
+  postResponse.data.postConnection.edges.forEach(({ node }) => {
+    node.heroImg = fixImgPath(node._sys.path, node.heroImg);
   });
   const global = await client.queries.global({ relativePath: "index.json" });
   return {

@@ -42,10 +42,32 @@ export const getStaticProps = async ({ params }) => {
   // Resolve the file path
   const filePath = path.join(process.cwd(), tinaProps.data.post._sys.path);
 
-  console.log("\n\nfilepath",filePath,"\n\n")
+  // console.log("\n\nfilepath", filePath, "\n\n");
 
   // Read the markdown file
-  const fileContents = fs.readFileSync(filePath, "utf8");
+  let fileContents = fs.readFileSync(filePath, "utf8");
+
+  const imageRegex = /!\[.*?\]\((.*?)\)/g;
+  fileContents = fileContents.replace(imageRegex, (match, imgPath) => {
+    const fixedPath = fixImgPath(tinaProps.data.post._sys.path, imgPath);
+    return match.replace(imgPath, fixedPath);
+  });
+
+  // Replace path in frontmatter's heroImg field
+  const frontmatterRegex = /^---[\s\S]+?---/;
+  const frontmatterMatch = fileContents.match(frontmatterRegex);
+  if (frontmatterMatch) {
+    const frontmatter = frontmatterMatch[0];
+    const heroImgRegex = /heroImg:\s*["']?(.*?)["']?(\s|$)/;
+
+    const updatedFrontmatter = frontmatter.replace(heroImgRegex, (match, imgPath) => {
+      const fixedPath = fixImgPath(tinaProps.data.post._sys.path, imgPath);
+      // console.log("fixedPath", tinaProps.data.post._sys.path, imgPath, fixedPath);
+      return `heroImg: ${fixedPath}\n`;
+    });
+
+    fileContents = fileContents.replace(frontmatterRegex, updatedFrontmatter);
+  }
 
   // Use gray-matter to parse the post metadata section
   const { content } = matter(fileContents);

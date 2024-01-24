@@ -6,6 +6,7 @@ import { merge } from "lodash-es";
 import React from "react";
 import { Column } from "../../components/columns/column";
 import ColumnDef from "../../tina/collection/column";
+import { fixImgPath } from "../../util/util";
 
 
 export default function ColumnPage(
@@ -30,6 +31,9 @@ export const getStaticProps = async ({ params }) => {
   });
   const postResponse = await client.queries.postConnection({
     filter: { columns: { column: { column: { name: { eq: tinaProps.data.column.name } } } } }
+  });
+  postResponse.data.postConnection.edges.forEach(({ node }) => {
+    node.heroImg = fixImgPath(node._sys.path, node.heroImg);
   });
   const global = await client.queries.global({ relativePath: "index.json" });
   return {

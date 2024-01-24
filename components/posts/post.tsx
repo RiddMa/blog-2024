@@ -20,7 +20,6 @@ import Link from "next/link";
 import { ImageAwesome } from "../blocks/image-awesome";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { zhCN } from "date-fns/locale";
-import { fixImgPath } from "../../util/util";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import emoji from "remark-emoji";
@@ -31,10 +30,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import CopyToClipboard from "react-copy-to-clipboard";
 
-let mdPath = "";
-
 export const Post = (props: PostType) => {
-  mdPath = props._sys.path;
   const date = new Date(props.date);
   let formattedDate = "";
   let dateToNow = "";
@@ -115,7 +111,7 @@ export const Post = (props: PostType) => {
           </div>
         </div>
         {props.heroImg &&
-          <ImageAwesome data-tina-field={tinaField(props, "heroImg")} src={fixImgPath(mdPath, props.heroImg)}
+          <ImageAwesome data-tina-field={tinaField(props, "heroImg")} src={props.heroImg}
                         alt={props.title} />
         }
         <div
@@ -176,7 +172,7 @@ export const Post = (props: PostType) => {
                       img: (props) => {
                         return <span>
                           <div className="h-4"></div>
-                          <ImageAwesome src={fixImgPath(mdPath, props.src)} alt={props.alt} />
+                          <ImageAwesome src={props.src} alt={props.alt} />
                           <div className="h-4"></div>
                         </span>;
                       }

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
 import format from "date-fns/format";
 import { PostsType } from "../../pages/posts";
-import { getUriFromFilepath, fixImgPath } from "../../util/util";
+import { getUriFromFilepath } from "../../util/util";
 import Image from "next/image";
 
 type PageQueryPostType = PostsType["node"]
@@ -14,16 +14,14 @@ export function PostCard(props: {
   const post = props.post;
   const date = new Date(post.updateDate);
   const formattedDate = !isNaN(date.getTime()) ? format(date, "yyyy-MM-dd") : "";
-  // console.log(JSON.stringify(post, null, 4));
   const postHref = getUriFromFilepath(post._sys.path);
-  const heroImgPath = fixImgPath(post._sys.path, post.heroImg);
 
   return <>
     {/*<pre>{JSON.stringify(post, null, 4)}</pre>*/}
     <Link href={postHref}
           className="card color-card flex flex-row prose-article-card transition-apple drop-shadow-lg hover:drop-shadow-2xl max-h-[250px]">
-      {heroImgPath && <div className="relative m-0 p-0 block min-w-[250px] max-w-[250px] min-h-[250px] max-h-[250px]">
-        <Image src={heroImgPath} alt="" className="card"
+      {post.heroImg && <div className="relative m-0 p-0 block min-w-[250px] max-w-[250px] min-h-[250px] max-h-[250px]">
+        <Image src={post.heroImg} alt="" className="card"
                fill={true}
                style={{ objectFit: "cover", margin: 0 }}
         />
