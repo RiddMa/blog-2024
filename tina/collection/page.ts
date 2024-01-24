@@ -8,7 +8,7 @@ const Page: Collection = {
   label: "Pages",
   name: "page",
   path: "public/content/pages",
-  format: "mdx",
+  format: "md",
   ui: {
     router: ({ document }) => {
       if (document._sys.filename === "home") {

@@ -4,7 +4,7 @@ const Category: Collection = {
   label: "Categories",
   name: "category",
   path: "public/content/categories",
-  format: "mdx",
+  format: "md",
   // ui: {
   //   router: ({ document }) => {
   //     return `/categories/${document._sys.filename}`;

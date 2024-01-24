@@ -3,6 +3,11 @@ import { client } from "../../tina/__generated__/client";
 import { useTina } from "tinacms/dist/react";
 import { Layout } from "../../components/layout";
 import { InferGetStaticPropsType } from "next";
+import PostDef from "../../tina/collection/post";
+import { fixImgPath } from "../../util/util";
+import path from "path";
+import * as fs from "fs";
+import matter from "gray-matter";
 
 // Use the props returned by get static props
 export default function BlogPostPage(
@@ -30,8 +35,22 @@ export default function BlogPostPage(
 
 export const getStaticProps = async ({ params }) => {
   const tinaProps = await client.queries.blogPostQuery({
-    relativePath: `${params.filename}.mdx`
+    relativePath: `${params.filename}.${PostDef.format}`
   });
+  tinaProps.data.post.heroImg = fixImgPath(tinaProps.data.post._sys.path, tinaProps.data.post.heroImg);
+
+  // Resolve the file path
+  const filePath = path.join(process.cwd(), tinaProps.data.post._sys.path);
+
+  console.log("\n\nfilepath",filePath,"\n\n")
+
+  // Read the markdown file
+  const fileContents = fs.readFileSync(filePath, "utf8");
+
+  // Use gray-matter to parse the post metadata section
+  const { content } = matter(fileContents);
+  tinaProps.data.post["rawBody"] = content;
+
   return {
     props: {
       ...tinaProps

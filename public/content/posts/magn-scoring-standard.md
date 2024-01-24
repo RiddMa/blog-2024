@@ -4,7 +4,7 @@ heroImg: /content/posts/assets/magn-poster.jpeg
 excerpt: 适用于电影、动漫、游戏等作品的 10 分制加权评分标准。
 author: public/content/authors/ridd-ma.md
 categories:
-  - category: public/content/categories/magn.mdx
+  - category: public/content/categories/magn.md
 tags:
   - MAGN
   - 影评

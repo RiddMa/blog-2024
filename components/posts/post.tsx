@@ -11,12 +11,9 @@
  limitations under the License.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "../util/container";
 import { Section } from "../util/section";
-import type { Components, TinaMarkdownContent } from "tinacms/dist/rich-text";
-import { TinaMarkdown } from "tinacms/dist/rich-text";
-import { Prism } from "tinacms/dist/rich-text/prism";
 import { PostType } from "../../pages/posts/[filename]";
 import { tinaField } from "tinacms/dist/react";
 import Link from "next/link";
@@ -24,101 +21,17 @@ import { ImageAwesome } from "../blocks/image-awesome";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { fixImgPath } from "../../util/util";
-import isUrl from "is-url";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import emoji from "remark-emoji";
+import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
+import Markdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 let mdPath = "";
-
-const components: Components<{
-  BlockQuote: {
-    children: TinaMarkdownContent;
-    authorName: string;
-  };
-  DateTime: {
-    format?: string;
-  };
-  NewsletterSignup: {
-    placeholder: string;
-    buttonText: string;
-    children: TinaMarkdownContent;
-    disclaimer?: TinaMarkdownContent;
-  };
-}> = {
-  code_block: (props) => <Prism {...props} />,
-  BlockQuote: (props: {
-    children: TinaMarkdownContent;
-    authorName: string;
-  }) => {
-    return (
-      <div>
-        <blockquote>
-          <TinaMarkdown content={props.children} />
-          {props.authorName}
-        </blockquote>
-      </div>
-    );
-  },
-  DateTime: (props) => {
-    const dt = React.useMemo(() => {
-      return new Date();
-    }, []);
-
-    switch (props.format) {
-      case "iso":
-        return <span>{format(dt, "yyyy-MM-dd")}</span>;
-      case "utc":
-        return <span>{format(dt, "eee, dd MMM yyyy HH:mm:ss OOOO")}</span>;
-      case "local":
-        return <span>{format(dt, "P")}</span>;
-      default:
-        return <span>{format(dt, "P")}</span>;
-    }
-  },
-  NewsletterSignup: (props) => {
-    return (
-      <div className="bg-white">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-          <div className="">
-            <TinaMarkdown content={props.children} />
-          </div>
-          <div className="mt-8 ">
-            <form className="sm:flex">
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email-address"
-                type="email"
-                autoComplete="email"
-                required
-                className="w-full px-5 py-3 border border-gray-300 shadow-sm placeholder-gray-400 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 sm:max-w-xs rounded-md"
-                placeholder={props.placeholder}
-              />
-              <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center py-3 px-5 border border-transparent text-base font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                >
-                  {props.buttonText}
-                </button>
-              </div>
-            </form>
-            <div className="mt-3 text-sm text-gray-500">
-              {props.disclaimer && <TinaMarkdown content={props.disclaimer} />}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  },
-  img: (props) => {
-    return <span>
-      <div className="h-4"></div>
-      <ImageAwesome src={fixImgPath(mdPath, props.url)} alt={props.alt} />
-      <div className="h-4"></div>
-    </span>;
-  }
-};
 
 export const Post = (props: PostType) => {
   mdPath = props._sys.path;
@@ -136,6 +49,9 @@ export const Post = (props: PostType) => {
     formattedUpdateDate = format(updateDate, "yyyy-MM-dd, HH:mm");
     updateDateToNow = formatDistanceToNowStrict(date, { addSuffix: true, locale: zhCN });
   }
+
+  const [copied, setCopied] = useState(false);
+
   return (
     <Section>
       <Container className="flex flex-col gap-8">
@@ -206,7 +122,68 @@ export const Post = (props: PostType) => {
           data-tina-field={tinaField(props, "_body")}
           className="prose-article flex flex-col"
         >
-          <TinaMarkdown components={components} content={props._body} />
+          {/*<TinaMarkdown components={components} content={props._body} />*/}
+          <Markdown remarkPlugins={[remarkGfm, remarkMath, emoji]}
+                    rehypePlugins={[rehypeKatex, rehypeRaw]}
+                    className={`transition-apple prose-article`}
+                    skipHtml={false}
+                    components={{
+                      pre(props) {
+                        return <pre className={`relative m-0 p-0`}>{props.children}</pre>;
+                      },
+                      code({ node, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || "");
+                        const language = match?.[1] ? match[1] : "";
+                        return language ? (
+                          <>
+                            <CopyToClipboard
+                              text={children}
+                              onCopy={() => {
+                                setCopied(true);
+                                setTimeout(() => setCopied(false), 2000);
+                              }}
+                            >
+                              <button className={`absolute right-4 top-4`}>
+                                {copied ? <span>OK!</span> : <span>Copy</span>}
+                              </button>
+                            </CopyToClipboard>
+                            <SyntaxHighlighter
+                              children={String(children).replace(/\n$/, "")}
+                              wrapLines={false}
+                              wrapLongLines={false}
+                              style={oneDark}
+                              language={language}
+                              showLineNumbers={true}
+                              PreTag="div"
+                              customStyle={{
+                                margin: 0,
+                                padding: "1rem 0.5rem",
+                                borderRadius: "1rem",
+                                fontSize: "1.125rem",
+                                fontWeight: "regular"
+                              }}
+                              codeTagProps={{
+                                style: { fontFamily: "JetBrains Mono, monospace", color: "#cbd5e1" }
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <code {...props} className={`${className}`}>
+                            {children}
+                          </code>
+                        );
+                      },
+                      img: (props) => {
+                        return <span>
+                          <div className="h-4"></div>
+                          <ImageAwesome src={fixImgPath(mdPath, props.src)} alt={props.alt} />
+                          <div className="h-4"></div>
+                        </span>;
+                      }
+                    }}
+          >
+            {props["rawBody"]}
+          </Markdown>
         </div>
         {props.tags &&
           <div className="flex flex-row flex-nowrap gap-4 prose-text text-color-caption">

@@ -7,10 +7,10 @@ excerpt: >
   advasti, distulit. Crudus sub coniuge iam dea propera sive
 author: public/content/authors/ridd-ma.md
 categories:
-  - category: public/content/categories/coding.mdx
-  - category: public/content/categories/magn.mdx
+  - category: public/content/categories/coding.md
+  - category: public/content/categories/magn.md
 columns:
-  - column: public/content/columns/openwrt-tinkering-guide.mdx
+  - column: public/content/columns/openwrt-tinkering-guide.md
 tags:
   - 家人们谁懂啊
   - test2

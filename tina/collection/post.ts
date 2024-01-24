@@ -4,7 +4,7 @@ const Post: Collection = {
   label: "Blog Posts",
   name: "post",
   path: "public/content/posts",
-  format: "mdx",
+  format: "md",
   // ui: {
   //   router: ({ document }) => {
   //     return `/article/${document._sys.filename}`;

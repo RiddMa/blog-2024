@@ -4,7 +4,7 @@ import { Blocks } from "../components/blocks-renderer";
 import { useTina } from "tinacms/dist/react";
 import { Layout } from "../components/layout";
 import { client } from "../tina/__generated__/client";
-import Page from "../tina/collection/page";
+import PageDef from "../tina/collection/page";
 
 export default function HomePage(
   props: InferGetStaticPropsType<typeof getStaticProps>
@@ -20,7 +20,7 @@ export default function HomePage(
 
 export const getStaticProps = async ({ params }) => {
   const tinaProps = await client.queries.contentQuery({
-    relativePath: `${params.filename}.${Page.format}`
+    relativePath: `${params.filename}.${PageDef.format}`
   });
   const props = {
     ...tinaProps,

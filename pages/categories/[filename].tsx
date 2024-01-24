@@ -5,6 +5,7 @@ import { InferGetStaticPropsType } from "next";
 import { merge } from "lodash-es";
 import React from "react";
 import { Category } from "../../components/categories/category";
+import CategoryDef from "../../tina/collection/category";
 
 
 
@@ -26,7 +27,7 @@ export default function CategoryPage(
 
 export const getStaticProps = async ({ params }) => {
   const tinaProps = await client.queries.category({
-    relativePath: `${params.filename}.mdx`
+    relativePath: `${params.filename}.${CategoryDef.format}`
   });
   const postResponse = await client.queries.postConnection({
     filter: { categories: { category: { category: { name: { eq: tinaProps.data.category.name } } } } }

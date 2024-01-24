@@ -3,9 +3,9 @@ title: "LeetCode it's MyGo!!!!! 2023年12月"
 excerpt: "88.合并两个有序数组 27.移除元素 26.删除有序数组中的重复项 80.删除有序数组中的重复项 II"
 author: public/content/authors/ridd-ma.md
 categories:
-  - category: public/content/categories/coding.mdx
+  - category: public/content/categories/coding.md
 columns:
-  - column: public/content/columns/leetcode-its-mygo.mdx
+  - column: public/content/columns/leetcode-its-mygo.md
 tags:
   - Go
   - Golang

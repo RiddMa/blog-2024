@@ -6,6 +6,7 @@ import { Layout } from "../components/layout";
 import { InferGetStaticPropsType } from "next";
 import React from "react";
 import PostsNav from "../components/posts/posts-nav";
+import { fixImgPath } from "../util/util";
 
 
 export default function HomePage(
@@ -27,6 +28,9 @@ export default function HomePage(
 
 export const getStaticProps = async () => {
   const tinaProps = await client.queries.pageQuery();
+  tinaProps.data.postConnection.edges.forEach(({ node }) => {
+    node.heroImg = fixImgPath(node._sys.path, node.heroImg);
+  });
   return {
     props: {
       ...tinaProps

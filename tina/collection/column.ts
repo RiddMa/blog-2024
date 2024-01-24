@@ -4,7 +4,7 @@ const Column: Collection = {
   label: "Columns",
   name: "column",
   path: "public/content/columns",
-  format: "mdx",
+  format: "md",
   // ui: {
   //   router: ({ document }) => {
   //     return `/categories/${document._sys.filename}`;

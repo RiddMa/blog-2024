@@ -5,7 +5,7 @@ import { InferGetStaticPropsType } from "next";
 import { merge } from "lodash-es";
 import React from "react";
 import { Column } from "../../components/columns/column";
-
+import ColumnDef from "../../tina/collection/column";
 
 
 export default function ColumnPage(
@@ -26,7 +26,7 @@ export default function ColumnPage(
 
 export const getStaticProps = async ({ params }) => {
   const tinaProps = await client.queries.column({
-    relativePath: `${params.filename}.mdx`
+    relativePath: `${params.filename}.${ColumnDef.format}`
   });
   const postResponse = await client.queries.postConnection({
     filter: { columns: { column: { column: { name: { eq: tinaProps.data.column.name } } } } }
