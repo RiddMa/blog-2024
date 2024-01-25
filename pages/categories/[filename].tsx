@@ -19,7 +19,7 @@ export default function CategoryPage(
     data: props.data
   });
   return (
-    <Layout rawData={data}>
+    <Layout>
       <Category {...data} />
     </Layout>
   );

@@ -19,7 +19,7 @@ export default function ColumnPage(
   });
   // console.log(JSON.stringify(props.data))
   return (
-    <Layout rawData={data}>
+    <Layout>
       <Column {...data} />
     </Layout>
   );
