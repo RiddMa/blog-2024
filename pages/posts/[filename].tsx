@@ -25,7 +25,7 @@ import remarkEmoji from "remark-emoji";
 import rehypeKatex from "rehype-katex";
 import isUrl from "is-url";
 import https from "https";
-import { randomBytes } from 'crypto';
+import { randomBytes } from "crypto";
 
 // Use the props returned by get static props
 export default function BlogPostPage(
@@ -115,9 +115,13 @@ export const getStaticProps = async ({ params }) => {
   // Generate placeholders for each image
   const images = {};
   for (const url of imageUrls) {
-    const file = fs.readFileSync(path.join(process.cwd(), "public", url));
-    const img = await getPlaiceholder(file);
-    images[url] = img;
+    try {
+      const file = fs.readFileSync(path.join(process.cwd(), "public", url));
+      const img = await getPlaiceholder(file);
+      images[url] = img;
+    } catch (e) {
+      console.warn("File does not exist: ", path.join(process.cwd(), "public", url));
+    }
   }
 
   const file = await unified()

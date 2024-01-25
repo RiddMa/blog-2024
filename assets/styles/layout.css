@@ -16,6 +16,22 @@
   @apply blur-bg transition-apple z-[100] mx-auto my-2 max-w-[1024px] rounded-2xl p-0 drop-shadow-2xl xl:my-4;
 }
 
+.column-right-wrapper {
+  @apply transition-apple fixed right-0 z-20 min-h-screen w-full max-w-full px-8 lg:right-[max(0px,calc(50%-752px))] lg:max-w-[240px] lg:pl-4 lg:pr-4 fhd:right-[max(0px,calc(50%-944px))] fhd:max-w-[432px] fhd:pl-16;
+}
+
+.column-left-wrapper {
+  @apply transition-apple fixed left-0 z-20 max-h-screen min-h-screen w-full max-w-full overflow-auto px-8 hover:opacity-100 lg:left-[max(0px,calc(50%-752px))] lg:max-w-[240px] lg:translate-x-0 lg:pl-4 lg:pr-4 lg:opacity-60 fhd:left-[max(0px,calc(50%-944px))] fhd:max-w-[432px] fhd:pr-16;
+}
+
+.content-wrapper {
+  @apply transition-apple z-0 mx-auto w-full min-w-0 max-w-[1504px] px-2 lg:pr-[calc((1504px-1024px)/2)] xl:px-[calc((1504px-1024px)/2)] fhd:max-w-[1888px] fhd:px-[calc((1888px-1024px)/2)];
+}
+
+.article-wrapper {
+  @apply z-10 max-w-[1024px];
+}
+
 .px-content {
   @apply px-4 lg:px-8
 }
