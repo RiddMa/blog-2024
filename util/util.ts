@@ -33,3 +33,14 @@ export const fixImgPath = (mdPath: string, imgPath: string): string | null => {
   }
   return resolvedPath;
 };
+
+export function extractTocFromHtml(html: string): string {
+  const tocRegex = /<nav class=["']?toc["']?>([\s\S]*?)<\/nav>/;
+  const match = tocRegex.exec(html);
+
+  if (match && match[0]) {
+    return match[0]
+  }
+
+  return ""; // Return an empty string if no TOC is found
+}

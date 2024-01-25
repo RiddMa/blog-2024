@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   @apply transition-all duration-300 ease-apple;
   font-family: -apple-system, BlinkMacSystemFont, SFProDisplay-Regular, "PingFang SC", "Myriad Pro",

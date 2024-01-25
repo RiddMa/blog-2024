@@ -141,9 +141,10 @@ export const Post = (props: PostType) => {
               <div data-tina-field={tinaField(props, "categories")} className="flex flex-row gap-4">
                 {
                   props.categories.map((category) =>
-                    <p key={category?.category?.name} className="text-color-href">
+                    <Link key={category?.category?.name} href={`/categories/${category.category._sys.filename}`}
+                          className="text-color-href">
                       {category?.category?.name}
-                    </p>
+                    </Link>
                   )
                 }
               </div>
@@ -180,6 +181,7 @@ export const Post = (props: PostType) => {
           data-tina-field={tinaField(props, "_body")}
           className="prose-article flex flex-col"
         >
+          <pre>{JSON.stringify(props.toc, null, 4)}</pre>
           {ReactComponent}
           {/*<div dangerouslySetInnerHTML={{ __html: props["html"] }} />*/}
         </div>

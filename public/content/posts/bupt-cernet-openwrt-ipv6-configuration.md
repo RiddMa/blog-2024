@@ -21,9 +21,6 @@ date: 2023-05-19T12:26:00+08:00
 updateDate: 2023-05-19T23:51:00+08:00
 ---
 
-> 给只有 128 位前缀的校园网地址配置 IPv6 NAT (NAT6)，可与 AdGuardHome、OpenClash 共存。
-> 搜索关键词：openwrt nat6
-
 # 前言
 
 首先介绍一下我的网络环境：
@@ -101,11 +98,11 @@ ip6tables -A FORWARD -i $LAN -j ACCEPT
 
 ![防火墙自定义规则](assets/20240118222956.png)
 
-## 测试 IPv6
+# 测试 IPv6
 
 “网络 - 网络诊断”，选择 IPv6，点击 Ping，成功访问（或者在 shell 中 `ping -6 openwrt.org`）。
 
-## 自动配置流量转发路由表
+# 自动配置流量转发路由表
 
 使用 SSH 或“系统 -TTYD 终端”连接 Shell，输入用户名 root 和密码登录。
 

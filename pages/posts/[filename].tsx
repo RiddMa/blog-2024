@@ -4,7 +4,7 @@ import { useTina } from "tinacms/dist/react";
 import { Layout } from "../../components/layout";
 import { InferGetStaticPropsType } from "next";
 import PostDef from "../../tina/collection/post";
-import { fixImgPath } from "../../util/util";
+import { extractTocFromHtml, fixImgPath } from "../../util/util";
 import path from "path";
 import fs from "fs";
 import matter from "gray-matter";
@@ -23,9 +23,15 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkMath from "remark-math";
 import remarkEmoji from "remark-emoji";
 import rehypeKatex from "rehype-katex";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeToc from "@jsdevtools/rehype-toc";
+import rehypeSlug from "rehype-slug";
+import rehypePresetMinify from "rehype-preset-minify";
 import isUrl from "is-url";
 import https from "https";
 import { randomBytes } from "crypto";
+import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
+import { RightNavbar } from "../../components/layout/right-navbar";
 
 // Use the props returned by get static props
 export default function BlogPostPage(
@@ -38,7 +44,7 @@ export default function BlogPostPage(
   });
   if (data && data.post) {
     return (
-      <Layout rawData={data} data={data.global}>
+      <Layout data={data.global} rightNavBar={<RightNavbar {...data.post} />}>
         <Post {...data.post} />
       </Layout>
     );
@@ -124,6 +130,25 @@ export const getStaticProps = async ({ params }) => {
     }
   }
 
+  const htmlWithToc = await unified()
+    .use(remarkParse)
+    .use(remarkFrontmatter)
+    .use(remarkGfm)
+    .use(remarkMath)
+    .use(remarkEmoji)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
+    .use(rehypeSanitize)
+    .use(rehypeSlug)
+    .use(rehypeAutolinkHeadings)
+    .use(rehypeKatex)
+    .use(rehypeToc)
+    .use(rehypePresetMinify)
+    .use(rehypeStringify)
+    .process(fileContents);
+
+  const tocHtml = extractTocFromHtml(String(htmlWithToc));
+
   const file = await unified()
     .use(remarkParse)
     .use(remarkFrontmatter)
@@ -131,21 +156,24 @@ export const getStaticProps = async ({ params }) => {
     .use(remarkMath)
     .use(remarkEmoji)
     .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeKatex)
     .use(rehypeRaw)
     .use(rehypeSanitize)
+    .use(rehypeSlug)
+    .use(rehypeAutolinkHeadings)
+    .use(rehypeKatex)
+    .use(rehypePresetMinify)
     .use(rehypeStringify)
     .process(fileContents);
 
   console.error(reporter(file));
   // console.log(String(file));
 
-
   return {
     props: merge(tinaProps, {
       data: {
         post: {
           images: images,
+          toc: tocHtml,
           html: String(file)
         }
       }
